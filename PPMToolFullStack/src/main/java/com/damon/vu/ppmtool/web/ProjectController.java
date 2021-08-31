@@ -31,7 +31,7 @@ public class ProjectController {
 
         // otherwise
         // save the project to database
-        Project p = projectService.saveOrUpdateProject(theProject);
+        Project p = projectService.saveOrUpdate(theProject);
         // returning the project as well as the status of the request
         return new ResponseEntity<Project>(p, HttpStatus.CREATED);
     }
@@ -46,6 +46,15 @@ public class ProjectController {
     public Iterable<Project> getAllProjects() {
         return projectService.findAll();
     }
+
+    @DeleteMapping("/{projectIdentifier}")
+    public ResponseEntity<?> deleteProject(@PathVariable String projectIdentifier) {
+        this.projectService.deleteByIdentifier(projectIdentifier);
+        return new ResponseEntity<String>("Project with ID: " + projectIdentifier + " was deleted!", HttpStatus.OK);
+    }
+
+
+
 
 
 }

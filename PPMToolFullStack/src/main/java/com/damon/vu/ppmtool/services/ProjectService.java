@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService {
 
+
     private ProjectRepository projectRepository;
 
     @Autowired
@@ -16,9 +17,8 @@ public class ProjectService {
         this.projectRepository = theProjectRepository;
     }
 
-    public Project saveOrUpdateProject(Project theProject) {
+    public Project saveOrUpdate(Project theProject) {
 
-        // Logic (once adding user and backlog)
         try {
             theProject.setProjectIdentifier(theProject.getProjectIdentifier().toUpperCase());
             return projectRepository.save(theProject);
@@ -28,7 +28,7 @@ public class ProjectService {
     }
 
     public Project findByProjectIdentifier(String projectIdentifier) {
-        Project project = projectRepository.findProjectByProjectIdentifier(projectIdentifier.toUpperCase());
+        Project project = projectRepository.findByProjectIdentifier(projectIdentifier.toUpperCase());
         if (project == null) {
             throw new ProjectIdentifierException("Project ID " + projectIdentifier + " does not exist");
         }
@@ -38,4 +38,14 @@ public class ProjectService {
     public Iterable<Project> findAll() {
         return projectRepository.findAll();
     }
+
+    public void deleteByIdentifier(String projectIdentifier) {
+        Project project = projectRepository.findByProjectIdentifier(projectIdentifier.toUpperCase());
+        if (project == null) {
+            throw new ProjectIdentifierException("Cannot delete Project with ID " + projectIdentifier + "! This project does not exist");
+        }
+        projectRepository.delete(project);
+    }
+
+
 }
